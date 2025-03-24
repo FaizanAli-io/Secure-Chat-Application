@@ -12,10 +12,11 @@ model User {
   username  String     @unique
   email     String     @unique
   password  String
-  rooms     RoomUser[]
-  messages  Message[]
+  authKey   String     @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  rooms     RoomUser[]
+  messages  Message[]
 }
 
 model Room {

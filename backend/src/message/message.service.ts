@@ -27,4 +27,15 @@ export class MessageService {
   async deleteMessage(id: string): Promise<void> {
     await this.prisma.message.delete({ where: { id } });
   }
+
+  async getMessagesByUser(userId: string): Promise<Message[]> {
+    return this.prisma.message.findMany({ where: { userId } });
+  }
+
+  async getMessagesByRoom(roomId: string): Promise<Message[]> {
+    return this.prisma.message.findMany({
+      where: { roomId },
+      include: { user: true },
+    });
+  }
 }

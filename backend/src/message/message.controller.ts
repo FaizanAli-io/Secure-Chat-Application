@@ -76,4 +76,21 @@ export class MessageController {
 
     await this.messageService.deleteMessage(id);
   }
+
+  @Get('user/:userId')
+  @ApiOperation({ summary: 'Get all messages sent by a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all messages sent by the user',
+  })
+  async getMessagesByUser(@Param('userId') userId: string) {
+    return this.messageService.getMessagesByUser(userId);
+  }
+
+  @Get('room/:roomId')
+  @ApiOperation({ summary: 'Get all messages in a room' })
+  @ApiResponse({ status: 200, description: 'Return all messages in the room' })
+  async getMessagesByRoom(@Param('roomId') roomId: string) {
+    return this.messageService.getMessagesByRoom(roomId);
+  }
 }
