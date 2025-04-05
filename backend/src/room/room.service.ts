@@ -17,6 +17,14 @@ export class RoomService {
       throw new BadRequestException('A room must have at least two users.');
     }
 
+    const existingRoom = await this.prisma.room.findUnique({
+      where: { name: data.name },
+    });
+
+    if (existingRoom) {
+      throw new BadRequestException('Room name is already in use.');
+    }
+
     return this.prisma.room.create({
       data: {
         name: data.name,

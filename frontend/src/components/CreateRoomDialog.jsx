@@ -6,6 +6,7 @@ const CreateRoomDialog = ({ user, refreshRooms, onClose }) => {
   const [newRoomName, setNewRoomName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchUsers();
@@ -30,7 +31,7 @@ const CreateRoomDialog = ({ user, refreshRooms, onClose }) => {
 
   const createRoom = async (e) => {
     e.preventDefault();
-    if (!newRoomName.trim() || selectedUsers.length < 1) return;
+    if (!newRoomName.trim()) return;
 
     try {
       await axios.post("http://localhost:3000/rooms", {
@@ -42,16 +43,16 @@ const CreateRoomDialog = ({ user, refreshRooms, onClose }) => {
       onClose();
       refreshRooms();
     } catch (error) {
-      console.error("Error creating room:", error);
+      setError("Error creating room: " + error.response?.data?.message || error.message);
     }
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg w-96 text-black">
-        <h3 className="text-lg font-semibold mb-2">Create Room</h3>
+      <div className="bg-gray-800 p-6 rounded-lg w-96 text-gray-200">
+        <h3 className="text-lg font-semibold mb-2 text-white">Create Room</h3>
         {loading ? (
-          <p className="text-center text-gray-500">Loading users...</p>
+          <p className="text-center text-gray-400">Loading users...</p>
         ) : (
           <form onSubmit={createRoom}>
             <input
@@ -59,32 +60,34 @@ const CreateRoomDialog = ({ user, refreshRooms, onClose }) => {
               placeholder="Room name"
               value={newRoomName}
               onChange={(e) => setNewRoomName(e.target.value)}
-              className="w-full p-2 border rounded mb-2"
+              className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded mb-2"
               required
             />
-            <div className="max-h-40 overflow-y-auto border p-2 mb-2">
+            <div className="max-h-40 overflow-y-auto border p-2 mb-2 border-gray-600">
               {users.map((u) => (
                 <div key={u.id} className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={selectedUsers.includes(u.id)}
                     onChange={() => toggleUserSelection(u.id)}
+                    className="accent-blue-600"
                   />
-                  <span className="text-black">{u.username}</span>
+                  <span className="text-white">{u.username}</span>
                 </div>
               ))}
             </div>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500"
+                className="px-4 py-2 bg-gray-600 text-gray-200 rounded hover:bg-gray-500"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
                 Create
               </button>

@@ -31,12 +31,12 @@ const AuthPage = ({ isSignUp }) => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-900 text-gray-200">
+      <div className="w-full max-w-md bg-gray-800 p-6 rounded-2xl shadow-lg">
+        <h2 className="text-2xl font-semibold text-center mb-4 text-white">
           {isSignUp ? "Sign Up" : "Sign In"}
         </h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
+        {error && <p className="text-red-400 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
             <input
@@ -45,7 +45,7 @@ const AuthPage = ({ isSignUp }) => {
               placeholder="Username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full p-2 border rounded-xl"
+              className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           )}
@@ -55,7 +55,7 @@ const AuthPage = ({ isSignUp }) => {
             placeholder="Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-2 border rounded-xl"
+            className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
           <input
@@ -64,19 +64,19 @@ const AuthPage = ({ isSignUp }) => {
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full p-2 border rounded-xl"
+            className="w-full p-2 bg-gray-700 text-white border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-xl hover:bg-blue-600"
+            className="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700"
           >
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
         </form>
         <p className="text-center mt-4">
           {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-          <Link to={isSignUp ? "/signin" : "/signup"} className="text-blue-500">
+          <Link to={isSignUp ? "/signin" : "/signup"} className="text-blue-400 hover:underline">
             {isSignUp ? "Sign In" : "Sign Up"}
           </Link>
         </p>

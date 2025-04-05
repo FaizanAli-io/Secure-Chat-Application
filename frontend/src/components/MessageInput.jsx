@@ -29,7 +29,7 @@ const MessageInput = ({ roomId, onMessageSent }) => {
         placeholder="Type a message..."
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
-        className="flex-1 p-2 border rounded"
+        className="flex-1 p-2 border border-gray-600 rounded bg-gray-700 text-white"
         required
       />
       <button type="submit" className="ml-2 bg-blue-500 text-white px-4 rounded hover:bg-blue-600">

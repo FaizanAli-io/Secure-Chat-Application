@@ -45,18 +45,18 @@ const EditRoomDialog = ({ room, user, onClose, refreshRooms }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg w-96 text-black">
-        <h3 className="text-lg font-semibold mb-2">Edit Room: {room.name}</h3>
+      <div className="bg-gray-800 p-6 rounded-lg w-96 text-gray-200">
+        <h3 className="text-lg font-semibold mb-2 text-white">Edit Room: {room.name}</h3>
         {loading ? (
-          <p className="text-center text-gray-500">Loading users...</p>
+          <p className="text-center text-gray-400">Loading users...</p>
         ) : (
           <>
-            <h4 className="font-semibold">Remove Users</h4>
-            <div className="max-h-40 overflow-y-auto border p-2 mb-2">
+            <h4 className="font-semibold text-white">Remove Users</h4>
+            <div className="max-h-40 overflow-y-auto border p-2 mb-2 border-gray-600">
               {roomUsers.map((u) => (
                 <div
                   key={u.id}
-                  className="flex items-center gap-2 p-2 hover:bg-gray-200 transition duration-200 rounded"
+                  className="flex items-center gap-2 p-2 hover:bg-gray-700 transition duration-200 rounded"
                 >
                   <button
                     onClick={() => updateRoomUsers(u.id, "remove")}
@@ -70,12 +70,12 @@ const EditRoomDialog = ({ room, user, onClose, refreshRooms }) => {
               ))}
             </div>
 
-            <h4 className="font-semibold">Add Users</h4>
-            <div className="max-h-40 overflow-y-auto border p-2 mb-2">
+            <h4 className="font-semibold text-white">Add Users</h4>
+            <div className="max-h-40 overflow-y-auto border p-2 mb-2 border-gray-600">
               {users.map((u) => (
                 <div
                   key={u.id}
-                  className="flex items-center gap-2 p-2 hover:bg-gray-200 transition duration-200 rounded"
+                  className="flex items-center gap-2 p-2 hover:bg-gray-700 transition duration-200 rounded"
                 >
                   <button
                     onClick={() => updateRoomUsers(u.id, "add")}
@@ -94,7 +94,7 @@ const EditRoomDialog = ({ room, user, onClose, refreshRooms }) => {
             <div className="flex justify-end gap-2">
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-400 rounded hover:bg-gray-500 transition duration-200"
+                className="px-4 py-2 bg-gray-600 text-gray-200 rounded hover:bg-gray-500 transition duration-200"
                 disabled={updating}
               >
                 Close
