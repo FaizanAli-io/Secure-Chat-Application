@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Sidebar from "../components/Sidebar";
 import MessageList from "../components/MessageList";
 import MessageInput from "../components/MessageInput";
@@ -13,6 +13,7 @@ const Chat = () => {
   const [selectedRoomName, setSelectedRoomName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [roomParticipants, setRoomParticipants] = useState([]);
+  const pollingRef = useRef(null);
 
   useEffect(() => {
     if (user) fetchRooms();
@@ -28,25 +29,58 @@ const Chat = () => {
   };
 
   const fetchMessages = async (roomId) => {
-    setSelectedRoom(roomId);
-    const room = rooms.find((r) => r.id === roomId);
-    setSelectedRoomName(room ? room.name : "Chat");
     try {
       const { data } = await axios.get(`http://localhost:3000/messages/room/${roomId}`);
       setMessages(data);
-
-      const participantsData = await axios.get(`http://localhost:3000/rooms/${roomId}/users`);
-      setRoomParticipants(participantsData.data);
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
+  const fetchRoomAndMessages = async (roomId) => {
+    setSelectedRoom(roomId);
+    const room = rooms.find((r) => r.id === roomId);
+    setSelectedRoomName(room ? room.name : "Chat");
+
+    try {
+      const [messagesResponse, participantsResponse] = await Promise.all([
+        axios.get(`http://localhost:3000/messages/room/${roomId}`),
+        axios.get(`http://localhost:3000/rooms/${roomId}/users`)
+      ]);
+
+      setMessages(messagesResponse.data);
+      setRoomParticipants(participantsResponse.data);
+    } catch (error) {
+      console.error("Error loading room:", error);
+    }
+  };
+
   const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+  // ⏱️ Start polling when a room is selected
+  useEffect(() => {
+    if (selectedRoom) {
+      // First fetch immediately
+      fetchMessages(selectedRoom);
+
+      // Start polling every 2 seconds
+      pollingRef.current = setInterval(() => {
+        fetchMessages(selectedRoom);
+      }, 2000);
+
+      // Cleanup interval on room change or component unmount
+      return () => clearInterval(pollingRef.current);
+    }
+  }, [selectedRoom]);
 
   return (
     <div className="flex h-screen bg-gray-900 text-gray-200">
-      <Sidebar rooms={rooms} onRoomSelect={fetchMessages} refreshRooms={fetchRooms} user={user} />
+      <Sidebar
+        rooms={rooms}
+        onRoomSelect={fetchRoomAndMessages}
+        refreshRooms={fetchRooms}
+        user={user}
+      />
       <main className="flex flex-col flex-1 bg-gray-800 shadow-lg rounded-2xl mx-6 my-4 overflow-hidden">
         {selectedRoom ? (
           <>
@@ -63,7 +97,7 @@ const Chat = () => {
               <MessageList messages={messages} user={user} />
             </div>
             <div className="border-t border-gray-700 p-4 bg-gray-700">
-              <MessageInput roomId={selectedRoom} onMessageSent={fetchMessages} />
+              <MessageInput roomId={selectedRoom} onMessageSent={() => fetchMessages(selectedRoom)} />
             </div>
           </>
         ) : (

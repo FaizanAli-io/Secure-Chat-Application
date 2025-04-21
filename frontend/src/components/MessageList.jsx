@@ -1,6 +1,16 @@
 import React from "react";
+import { decryptMessage } from "../utils/encryption";
 
 const MessageList = ({ messages, user }) => {
+  const renderDecryptedMessage = (encryptedContent) => {
+    try {
+      return decryptMessage(encryptedContent);
+    } catch (error) {
+      console.error("Error decrypting message:", error);
+      return "Unable to decrypt message";
+    }
+  };
+
   return (
     <div className="h-full w-full overflow-y-auto p-4 bg-gray-900 text-white scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
       {messages.map((msg, index) => {
@@ -40,7 +50,7 @@ const MessageList = ({ messages, user }) => {
                     isCurrentUser ? "bg-blue-600" : "bg-gray-700"
                   }`}
                 >
-                  {msg.content}
+                  {renderDecryptedMessage(msg.content)}
                 </div>
 
                 <div

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { encryptMessage } from "../utils/encryption";
 
 const MessageInput = ({ roomId, onMessageSent }) => {
   const [newMessage, setNewMessage] = useState("");
@@ -10,8 +11,10 @@ const MessageInput = ({ roomId, onMessageSent }) => {
     if (!newMessage.trim()) return;
 
     try {
+      const encryptedContent = encryptMessage(newMessage);
+      
       await axios.post("http://localhost:3000/messages", {
-        content: newMessage,
+        content: encryptedContent,
         roomId,
         userId: user.id
       });
